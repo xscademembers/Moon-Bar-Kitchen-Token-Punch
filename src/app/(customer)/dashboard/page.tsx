@@ -4,7 +4,7 @@ import { CustomerQrCode } from "@/components/moon-ui/customer-qr-code";
 import { PhoneDisplay } from "@/components/customer/phone-display";
 import { getCustomerSession } from "@/lib/auth/customer-session";
 import { upsertCustomer } from "@/lib/customers/customer-store";
-import { getAppBaseUrl } from "@/lib/app-url";
+import { getAppBaseUrl, isLocalDevAppUrl } from "@/lib/app-url";
 import { buildQrProfileUrl, buildQrPublicId } from "@/lib/journey/qr-identity";
 import { getCustomerProgress } from "@/lib/journey/punch-store";
 import { getSlotStatus, type SlotStatus } from "@/lib/journey/progress";
@@ -36,8 +36,7 @@ export default async function CustomerDashboardPage() {
   const qrPublicId = buildQrPublicId(phone);
   const appBaseUrl = await getAppBaseUrl();
   const qrProfileUrl = buildQrProfileUrl(appBaseUrl, phone, displayName);
-  const needsNetworkUrl =
-    appBaseUrl.includes("localhost") || appBaseUrl.includes("127.0.0.1");
+  const needsNetworkUrl = isLocalDevAppUrl(appBaseUrl);
   const { hour: currentHour, slot: currentSlot } = resolveCurrentSlot();
 
   const punchSlots = SLOT_WINDOWS.map((slot) => ({
